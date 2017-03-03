@@ -58,7 +58,7 @@ def Khalf(nz,K):
     return K_ph,K_mh
     
 
-def ImplicitSolver_Psi_npimp1(Psi_n,Psi_np1m,theta_n, theta_np1m,C_np1m,K_np1m_ph,K_np1m_mh,nz,Psi_top,Psi_bot ):
+def ImplicitSolver_Psi_np1mp1(Psi_n,Psi_np1m,theta_n, theta_np1m,C_np1m,K_np1m_ph,K_np1m_mh,nz,Psi_top,Psi_bot ):
     
     # Build the diagal and up,low diagnal for matrix A, where Ax = b
     Mdia = Ss*theta_np1m/poros/dt + C_np1m/dt+(K_np1m_ph+K_np1m_mh)/dz**2
@@ -70,7 +70,7 @@ def ImplicitSolver_Psi_npimp1(Psi_n,Psi_np1m,theta_n, theta_np1m,C_np1m,K_np1m_p
     Ldia[nz-1] = 0.0
     
     # known values on the RHS
-    RHS = Ss*theta_np1m/poros*Psi_n/dt+(theta_n-theta_np1m)/dt+C_np1m*Psi_np1m/dt + (K_np1m_ph-K_np1m_mh)/dz
+    RHS = Ss*theta_np1m/poros*Psi_n/dt+(theta_n-theta_np1m)/dt+C_np1m*Psi_np1m/dt - (K_np1m_ph-K_np1m_mh)/dz
     RHS[0] = Psi_top 
     RHS[nz-1] = Psi_bot
     
@@ -85,7 +85,7 @@ def ImplicitSolver_Psi_npimp1(Psi_n,Psi_np1m,theta_n, theta_np1m,C_np1m,K_np1m_p
     ### Solve x, Ax = b
     Psi_np1mp1 = spsolve(A1d,RHS)
     
-    return Psi_np1mp1
+    return A1d, Psi_np1mp1
     
 
 
